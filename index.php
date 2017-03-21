@@ -30,6 +30,7 @@ error_reporting(E_ALL);
 	<link href = "Style.css" rel = "stylesheet"/>
 	<script src="jquery-3.1.1.min.js"></script>
 	<script src="sorttable.js"></script>
+	<script src="dropdown.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body>
@@ -38,7 +39,7 @@ error_reporting(E_ALL);
     </div>
 	
 	<div class="dropdown">
-	  <button onclick="myFunction()" class="dropbtn">Dropdown Test</button>
+	  <button onclick="dropdownFunction()" class="dropbtn">Dropdown Test</button>
 	  <div id="myDropdown" class="dropdown-content">
 	    <a href="#">Link 1</a>
 	    <a href="#">Link 2</a>
