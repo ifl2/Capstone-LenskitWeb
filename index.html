@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<title>Lenskit Home</title>
+	<link href = "Style.css" rel = "stylesheet"/>
+	<script src="sorttable.js"></script>
+	<script src="dropdown.js"></script>
+</head>
+<body>
+	<div class="lenskit-status">
+		<h3>Lenskit Status</h3>
+	</div>
+
+	<div class="dropdown">
+		<button onclick="dropdownFunction()" class="dropbtn">Current Experiments</button>
+		<div id="myDropdown" class="dropdown-content">
+			<a href="#">Experiment 1</a>
+			<a href="#">Experiment 2</a>
+			<a href="#">Experiment 3</a>
+		</div>
+	</div>
+
+	<table class="sortable table-fill">
+		<thead><tr>
+			<th>Job</th>
+			<th>Algorithm</th>
+			<th>Data Set</th>
+			<th>Status</th>
+			<th>Start Time</th>
+			<th>Run Time</th>
+			<th>Progress</th>
+		</tr></thead>
+		<tbody>
+			<tr>
+				<td>1</td>
+				<td>An Algorithm</td>
+				<td>Data Set 7</td>
+				<td>Running</td>
+				<td>StartTime</td>
+				<td>RunTime</td>
+				<td><progress value="11" max="100"></progress></td>
+			</tr><tr>
+				<td>2</td>
+				<td>Algorithm+</td>
+				<td>Data Set 2</td>
+				<td>Running</td>
+				<td>StartTime</td>
+				<td>RunTime</td>
+				<td><progress value="22" max="100"></progress></td>
+			</tr><tr>
+				<td>3</td>
+				<td>The Number Cruncher</td>
+				<td>Data Set 9</td>
+				<td>Finished</td>
+				<td>StartTime</td>
+				<td>RunTime</td>
+				<td><progress value="100" max="100"></progress></td>
+			</tr><tr>
+				<td>4</td>
+				<td>Brute Force</td>
+				<td>Data Set 1</td>
+				<td>Running</td>
+				<td>StartTime</td>
+				<td>RunTime</td>
+				<td><progress value="2" max="100"></progress></td>
+			</tr><tr>
+				<td>5</td>
+				<td>Broken Algorithm</td>
+				<td>Data Set 11B</td>
+				<td>Halted</td>
+				<td>StartTime</td>
+				<td>RunTime</td>
+				<td><progress max="100"></progress></td>
+			</tr>
+		</tbody>
+  </table>
+</body>
+</html>
