@@ -211,3 +211,13 @@ progress[value] {
 	width: 250px;
 	height: 24px;
 }
+
+/* Footer */
+
+footer {
+  color: #fafafa;
+  font-size:15px;
+  text-align:center;
+  margin: center;
+}
+
