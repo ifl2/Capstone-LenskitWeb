@@ -13,7 +13,7 @@
 				s = '<tr><td>' + count + '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
 				arr[count] = s;
 			}
-			document.getElementById('testT').innerHTML = arr.join("");
+			document.getElementById('tableBody').innerHTML = arr.join("");
 		}
 	</script>
 </head>
@@ -41,43 +41,7 @@
 			<th>Run Time</th>
 			<th>Progress</th>
 		</tr></thead>
-		<tbody id="testT">
-			<tr id="test">
-
-			</tr><tr>
-				<td>2</td>
-				<td>Algorithm+</td>
-				<td>Data Set 2</td>
-				<td>Running</td>
-				<td>StartTime</td>
-				<td>RunTime</td>
-				<td><progress value="22" max="100"></progress></td>
-			</tr><tr>
-				<td>3</td>
-				<td>The Number Cruncher</td>
-				<td>Data Set 9</td>
-				<td>Finished</td>
-				<td>StartTime</td>
-				<td>RunTime</td>
-				<td><progress value="100" max="100"></progress></td>
-			</tr><tr>
-				<td>4</td>
-				<td>Brute Force</td>
-				<td>Data Set 1</td>
-				<td>Running</td>
-				<td>StartTime</td>
-				<td>RunTime</td>
-				<td><progress value="2" max="100"></progress></td>
-			</tr><tr>
-				<td>5</td>
-				<td>Broken Algorithm</td>
-				<td>Data Set 11B</td>
-				<td>Halted</td>
-				<td>StartTime</td>
-				<td>RunTime</td>
-				<td><progress max="100"></progress></td>
-			</tr>
-		</tbody>
+		<tbody id="tableBody"/>
   </table>
   <footer>
 	<br>
