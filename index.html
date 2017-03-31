@@ -7,21 +7,10 @@
 	<script src="sorttable.js"></script>
 	<script src="dropdown.js"></script>
 	<script>
-		window.onload = function(){
-			var str = '<td id="test2"></td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td>';
-			var str2 = '1!'
-			document.getElementById('test').innerHTML = str;
-			document.getElementById('test2').innerHTML = str2;
-			var s1 = "";
-			var s2 = "";
-			var s3 = "";
-			var s = "";
-			var arr = [];
-			for(count = 0; count < 10; count++){
-				s1= '<tr><td>';
-				s2= count;
-				s3= '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
-				s = s1+s2+s3;
+		window.onload = function() {
+			arr = [];
+			for(count = 0; count < 10; count++) {
+				s = '<tr><td>' + count + '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
 				arr[count] = s;
 			}
 			document.getElementById('testT').innerHTML = arr.join("");
