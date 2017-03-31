@@ -6,12 +6,33 @@
 	<link href = "Style.css" rel = "stylesheet"/>
 	<script src="sorttable.js"></script>
 	<script src="dropdown.js"></script>
+	<script>
+		window.onload = function(){
+			var str = '<td id="test2"></td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td>';
+			var str2 = '1!'
+			document.getElementById('test').innerHTML = str;
+			document.getElementById('test2').innerHTML = str2;
+			var s1 = "";
+			var s2 = "";
+			var s3 = "";
+			var s = "";
+			var arr = [];
+			for(count = 0; count < 10; count++){
+				s1= '<tr><td>';
+				s2= count;
+				s3= '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
+				s = s1+s2+s3;
+				arr[count] = s;
+			}
+			document.getElementById('testT').innerHTML = arr.join("");
+		}
+	</script>
 </head>
 <body>
 	<div class="lenskit-status">
-		<h3>Lenskit Status</h3>
+		<a href="http://lenskit.org/"><img src="logo.png" class="scalable" width=384 height=96></a>
+		<p><i>Open-Source Tools for Recommender Systems</i>
 	</div>
-
 	<div class="dropdown">
 		<button onclick="dropdownFunction()" class="dropbtn">Current Experiments</button>
 		<div id="myDropdown" class="dropdown-content">
@@ -31,15 +52,9 @@
 			<th>Run Time</th>
 			<th>Progress</th>
 		</tr></thead>
-		<tbody>
-			<tr>
-				<td>1</td>
-				<td>An Algorithm</td>
-				<td>Data Set 7</td>
-				<td>Running</td>
-				<td>StartTime</td>
-				<td>RunTime</td>
-				<td><progress value="11" max="100"></progress></td>
+		<tbody id="testT">
+			<tr id="test">
+
 			</tr><tr>
 				<td>2</td>
 				<td>Algorithm+</td>
@@ -76,9 +91,10 @@
 		</tbody>
   </table>
   <footer>
+	<br>
     Copyright © 2017 <a href="https://github.com/lenskit/lenskit/blob/master/CONTRIBUTORS.md">LensKit Contributors</a>.
-  <br>
-Problems? Suggestions? This site is <a href="http://github.com/lenskit/lenskit.github.io">public on GitHub</a>.
+	<br>
+	Problems? Suggestions? This site is <a href="http://github.com/lenskit/lenskit.github.io">public on GitHub</a>.
   </footer>
 </body>
 </html>
