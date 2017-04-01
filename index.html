@@ -3,10 +3,16 @@
 <head>
 	<meta charset="utf-8" />
 	<title>Lenskit Home</title>
-	<link href = "Style.css" rel = "stylesheet"/>
+	<link href = "/Style.css" rel = "stylesheet" type="text/css">
 	<script src="sorttable.js"></script>
 	<script src="dropdown.js"></script>
+
+        <!-- Need those to so socket.io works -->
+	<script src="/socket.io/socket.io.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
 	<script>
+	  var information = 'hello';
 		window.onload = function() {
 			arr = [];
 			for(count = 0; count < 10; count++) {
@@ -16,6 +22,29 @@
 			document.getElementById('tableBody').innerHTML = arr.join("");
 		}
 	</script>
+
+        <script>
+          <!--'information'  will hold all the info from the data base-->
+          var infomation = 'hello';
+
+          $(function () {
+          var socket = io();
+          <!-- we can make the request to the server onclick refresh -->
+          $('button').click(function() {
+          socket.emit('chat message', '0');
+          return false;
+          });
+
+          socket.on('chat message', function(msg){
+          <!-- Everything is being passeg through 'msg' when refresh is pressed -->
+          information = msg;
+          <!-- add here code to parse variable and fill up the table(next two lines are for testing-->
+	  document.getElementById('tableBody').innerHTML = information;
+          $('#messages').append($('<li>').text(information));
+            });
+          });
+
+        </script>
 </head>
 <body>
 	<div class="lenskit-status">
@@ -30,6 +59,12 @@
 			<a href="#">Experiment 3</a>
 		</div>
 	</div>
+
+        <div>
+          <!--refresh button -->
+          <ul id="messages"></ul>
+          <button>Refresh</button>
+        </div>
 
 	<table class="sortable table-fill">
 		<thead><tr>
