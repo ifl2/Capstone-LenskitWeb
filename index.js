@@ -6,18 +6,20 @@ var io = require('socket.io')(http);
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
 	res.sendFile(__dirname+'/index.html');
-    });
+});
 
-io.on('connection', function(socket){
+io.on('connection', function(socket) {
 	//server received the request 'msg' from the web
-	socket.on('chat message', function(msg){
-		if(msg === '0'){
-		    console.log('start the web, send type of algoritms to fill dropdown');
+	socket.on('chat message', function(msg) {
+		if(msg == '0') {
+		    console.log('Received the value: ' + msg + ' from website: Fill out dropdown');
+			// send all experiments to website to be added to dropdown
 		}
-		else{
-		    console.log('Revceived the value: ' + msg + ' from website');
+		else {
+		    console.log('Received the value: ' + msg + ' from website: Send experiment ' + msg);
+			// send all jobs related to experiment # website to be added by table
 		}
 
 		//server sent array with all the info for the table
@@ -28,11 +30,10 @@ io.on('connection', function(socket){
 		    arr[count] = s;
 		}
 
-		io.emit('chat message', arr);
+		io.emit('chat message', arr.join(""));
 	    });
-    });
+	});
 
-http.listen(3000, function(){
+http.listen(3000, function() {
 	console.log('listening on localhost:3000');
-    });
-   
+});
