@@ -6,45 +6,43 @@
 	<link href = "/Style.css" rel = "stylesheet" type="text/css">
 	<script src="sorttable.js"></script>
 	<script src="dropdown.js"></script>
-
-        <!-- Need those to so socket.io works -->
 	<script src="/socket.io/socket.io.js"></script>
-        <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 
 	<script>
-	  var information = 'hello';
+		currentExperiment = 0;
+		socket = io();
+		
 		window.onload = function() {
 			arr = [];
+			socket.emit('chat message', currentExperiment);
+			/*
 			for(count = 0; count < 10; count++) {
 				s = '<tr><td>' + count + '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
 				arr[count] = s;
 			}
 			document.getElementById('tableBody').innerHTML = arr.join("");
+			*/
+		}
+		
+		$(function () {
+			<!-- we can make the request to the server onclick refresh -->
+			$('#btn').click(function () {
+				socket.emit('chat message', currentExperiment);
+				return false;
+			});
+			socket.on('chat message', function(msg) {
+				<!-- add here code to parse variable and fill up the table(next two lines are for testing-->
+				document.getElementById('tableBody').innerHTML = msg;
+				$('#messages').append($('<li>').text(msg));
+			});
+		});
+		
+		function experimentSelect() {
+			currentExperiment = event.target.id.replace( /^\D+/g, '');
+			socket.emit('chat message', currentExperiment);
 		}
 	</script>
-
-        <script>
-          <!--'information'  will hold all the info from the data base-->
-          var infomation = 'hello';
-
-          $(function () {
-          var socket = io();
-          <!-- we can make the request to the server onclick refresh -->
-          $('#btn').click(function() {
-          socket.emit('chat message', '0');
-          return false;
-          });
-
-          socket.on('chat message', function(msg){
-          <!-- Everything is being passeg through 'msg' when refresh is pressed -->
-          information = msg;
-          <!-- add here code to parse variable and fill up the table(next two lines are for testing-->
-	  document.getElementById('tableBody').innerHTML = information;
-          $('#messages').append($('<li>').text(information));
-            });
-          });
-
-        </script>
 </head>
 <body>
 	<div class="lenskit-status">
@@ -54,17 +52,17 @@
 	<div class="dropdown">
 		<button onclick="dropdownFunction()" class="dropbtn">Current Experiments</button>
 		<div id="myDropdown" class="dropdown-content">
-			<a href="#">Experiment 1</a>
-			<a href="#">Experiment 2</a>
-			<a href="#">Experiment 3</a>
+			<button onclick="experimentSelect()" id="exp1" class="btn">Experiment 1</button><br>
+			<button onclick="experimentSelect()" id="exp2" class="btn">Experiment 2</button><br>
+			<button onclick="experimentSelect()" id="exp3" class="btn">Experiment 3</button><br>
 		</div>
+		<button id="btn" class="btn">REFRESH</button>
 	</div>
 
-        <div>
-          <!--refresh button -->
-          <ul id="messages"></ul>
-          <button id="btn">REFRESH</button>
-        </div>
+	<!-- Recieved messages : TEST CODE -->
+	<div>
+		<ul id="messages"></ul>
+	</div>
 
 	<table class="sortable table-fill">
 		<thead><tr>
@@ -77,12 +75,12 @@
 			<th>Progress</th>
 		</tr></thead>
 		<tbody id="tableBody"/>
-  </table>
-  <footer>
-	<br>
-    Copyright © 2017 <a href="https://github.com/lenskit/lenskit/blob/master/CONTRIBUTORS.md">LensKit Contributors</a>.
-	<br>
-	Problems? Suggestions? This site is <a href="http://github.com/lenskit/lenskit.github.io">public on GitHub</a>.
-  </footer>
+	</table>
+	<footer>
+		<br>
+		Copyright © 2017 <a href="https://github.com/lenskit/lenskit/blob/master/CONTRIBUTORS.md">LensKit Contributors</a>.
+		<br>
+		Problems? Suggestions? This site is <a href="http://github.com/lenskit/lenskit.github.io">public on GitHub</a>.
+	</footer>
 </body>
 </html>
