@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="sqlite-jdbc-3.16.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lenskit/lenskit-eval/src/main/java/org/lenskit/eval/traintest/libs/sqlite-jdbc-3.16.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

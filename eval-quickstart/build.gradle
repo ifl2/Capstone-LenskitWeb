@@ -1,0 +1,138 @@
+/* This file may be freely modified, used, and redistributed without restriction. */
+/* Set up the repositories to get the LensKit plugin.
+ * This configuration pulls in things needed for the build.gradle script itself */
+buildscript {
+    repositories {
+        // LensKit snapshots are published to the Sonatype snapshot repository
+        mavenLocal()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots/'
+        }
+        // LensKit releases are published to Maven Central
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.lenskit:lenskit-gradle:3.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'java' // if you use Groovy or Scala, add those plugins
+apply plugin: 'lenskit'
+
+/* Set up the repositories for getting LensKit and other libraries.
+ * These repositories are used for your Java or Groovy code, and for running LensKit.
+ */
+repositories {
+    mavenLocal()
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
+    mavenCentral()
+}
+
+dependencies {
+    // Code needs to build with LensKit.
+    compile "org.lenskit:lenskit-all:3.0-SNAPSHOT"
+    // To run the code, we also need the LensKit CLI.
+    runtime "org.lenskit:lenskit-cli:3.0-SNAPSHOT"
+
+    // Tests use JUnit
+    testCompile "junit:junit:4.12"
+}
+
+/* Configure LensKit */
+lenskit {
+    // you can configure the threadCount and maxMemory here, or on the command line
+    // e.g. -PthreadCount=8
+}
+
+import org.lenskit.gradle.*
+
+/* Download the MovieLens data set */
+task fetchData {
+    description 'Fetches the MovieLens data set.'
+    ext.dataDir = "data/ml-100k"
+    ext.zipFile = "data/ml-100k.zip"
+
+    outputs.dir dataDir
+    outputs.file zipFile
+
+    doLast {
+        mkdir dataDir
+        ant {
+            get(src: 'http://files.grouplens.org/datasets/movielens/ml-100k.zip',
+                dest: zipFile,
+                skipExisting: true)
+            unzip(src: zipFile, dest: dataDir) {
+                patternset {
+                    include name: 'ml-100k/*'
+                }
+                mapper type: 'flatten'
+            }
+        }
+    }
+}
+
+task crossfold(type: Crossfold, group: 'evaluate') {
+    // download data before evaluating
+    dependsOn fetchData
+
+    input 'data/ml-100k.yml'
+    // test on random 1/5 of each user's ratings
+    holdoutFraction(0.2, 'random')
+    // use 5-fold cross-validation
+    partitionCount 5
+}
+
+/* Run the LensKit evaluation */
+task evaluate(type: TrainTest, group: 'evaluate') {
+    description 'Runs the LensKit evaluation.'
+    logFile "$buildDir/evaluate.log"
+    logFileLevel 'DEBUG'
+
+    // we add our crossfold task as evaluation input
+    dataSet crossfold
+
+    // send the output to appropriate files
+    outputFile "$buildDir/eval-results.csv"
+    userOutputFile "$buildDir/eval-users.csv"
+
+    // configure our algorithms
+    algorithm 'PersMean', 'algorithms/pers-mean.groovy'
+    algorithm 'ItemItem', 'algorithms/item-item.groovy'
+
+    // and some evaluation tasks and metrics
+    predict {
+        metric 'rmse'
+        metric 'ndcg'
+    }
+    recommend {
+        listSize 10
+        metric 'mrr'
+    }
+}
+
+task analyzeResults(type: Exec, group: 'evaluate') {
+    description 'Post-processes evaluation results to draw charts.'
+
+    dependsOn evaluate
+
+    inputs.files "$buildDir/eval-results.csv", 'analyze-output.ipynb'
+    outputs.file "$buildDir/analysis.html"
+
+    /* run Jupyter/IPython. Location can be overridden with -Pipython.bin=/usr/bin/ipython */
+    if (project.hasProperty('ipython.bin')) {
+        executable project.getProperty('ipython.bin')
+    } else {
+        executable 'jupyter'
+    }
+    args 'nbconvert', '--to', 'html', '--execute'
+    args '--output', file("$buildDir/analysis.html")
+    args file("analyze-output.ipynb")
+}
+
+task cleanData {
+    doLast {
+        delete 'data'
+    }
+}
