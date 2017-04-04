@@ -64,6 +64,21 @@ div.lenskit-status {
 	display: block;
 }
 
+/* BUTTONS */
+
+.btn {
+	background-color: #1f677c;
+	color: white;
+	min-width: 300px;
+	padding: 18px;
+	font-size: 18px;
+	border: none;
+	cursor: pointer;
+}
+.btn:hover {
+	background-color: #5c3566;
+}
+
 /* TABLE */
 
 .table-fill {
