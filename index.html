@@ -30,7 +30,7 @@
           $(function () {
           var socket = io();
           <!-- we can make the request to the server onclick refresh -->
-          $('button').click(function() {
+          $('#btn').click(function() {
           socket.emit('chat message', '0');
           return false;
           });
@@ -63,7 +63,7 @@
         <div>
           <!--refresh button -->
           <ul id="messages"></ul>
-          <button>Refresh</button>
+          <button id="btn">REFRESH</button>
         </div>
 
 	<table class="sortable table-fill">
