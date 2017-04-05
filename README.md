@@ -3,7 +3,7 @@
 get started with node/express:
 
 1. install node.js - https://nodejs.org/en/
-2. install sqlite3 -  https://www.tutorialspoint.com/sqlite/sqlite_installation.htm
+2. on the command line write this->  npm install https://github.com/mapbox/node-sqlite3/tarball/master 
 3. on the command line write this->     npm install --save express@4.15.2
 4. on the command line write this->     npm install --save socket.io
 5. on the command line write this->     npm install body-parser
