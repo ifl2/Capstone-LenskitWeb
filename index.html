@@ -15,7 +15,7 @@
 		
 		window.onload = function() {
 			arr = [];
-			socket.emit('chat message', currentExperiment);
+			socket.emit('sent jobs', currentExperiment);
 			/*
 			for(count = 0; count < 10; count++) {
 				s = '<tr><td>' + count + '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
@@ -28,19 +28,19 @@
 		$(function () {
 			<!-- we can make the request to the server onclick refresh -->
 			$('#btn').click(function () {
-				socket.emit('chat message', currentExperiment);
+				socket.emit('sent jobs', currentExperiment);
 				return false;
 			});
-			socket.on('chat message', function(msg) {
+			socket.on('sent jobs', function(msg) {
 				<!-- add here code to parse variable and fill up the table(next two lines are for testing-->
 				document.getElementById('tableBody').innerHTML = msg;
-				$('#messages').append($('<li>').text(msg));
+				<!-- $('#messages').append($('<li>').text(msg)); -->
 			});
 		});
 		
 		function experimentSelect() {
 			currentExperiment = event.target.id.replace( /^\D+/g, '');
-			socket.emit('chat message', currentExperiment);
+			socket.emit('sent jobs', currentExperiment);
 		}
 	</script>
 </head>
@@ -59,19 +59,22 @@
 		<button id="btn" class="btn">REFRESH</button>
 	</div>
 
-	<!-- Recieved messages : TEST CODE -->
+	<!-- Recieved messages : TEST CODE --
 	<div>
 		<ul id="messages"></ul>
-	</div>
+	</div-->
 
 	<table class="sortable table-fill">
 		<thead><tr>
-			<th>Job</th>
-			<th>Algorithm</th>
-			<th>Data Set</th>
+			<th>ID</th>
+			<th>Description</th>
+			<th>Type</th>
 			<th>Status</th>
-			<th>Start Time</th>
-			<th>Run Time</th>
+			<th>Est. Steps</th>
+			<th>Comp. Steps</th>
+			<th>Start</th>
+			<th>Finish</th>
+			<th>RunTime</th>
 			<th>Progress</th>
 		</tr></thead>
 		<tbody id="tableBody"/>
