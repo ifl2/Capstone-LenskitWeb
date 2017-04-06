@@ -12,7 +12,6 @@ var io = require('socket.io')(http);
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname,'public')));
 
-
 db.serialize(function() {
   db.run("drop table if exists Jobs");
   db.run("drop table if exists Connections");
@@ -26,12 +25,10 @@ db.serialize(function() {
     + " startTime integer NOT NULL,"
     + " finishTime integer)");
 
-
   db.run("create table Connections ("
     + " childID char(100) PRIMARY KEY NOT NULL,"
     + " parentID char(100))");
 })
-
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname+'/index.html');
@@ -41,20 +38,44 @@ io.on('connection', function(socket){
   var arr = [];
   //server received the request 'msg' from the web
   socket.on('sent jobs', function(msg){
-    if(msg === '0'){
-      console.log('start the web, send type of algoritms to fill dropdown');
-    }
-    else{
-      console.log('Received the value: ' + msg + ' from website');
-    }
-    //server sent array with all the info for the table
-    db.all("select * from Jobs", function(err, rows) {
-      rows.forEach(function (row) {
-        arr.push([row.id,row.description,row.type,row.completed,row.estimatedSteps,row.completedSteps,row.startTime,row.finishTime]);
-      })
-    });
-
-    io.emit('sent jobs', arr);
+	if(msg == '0') {
+		console.log('Received the value: ' + msg + ' from website: Fill out dropdown');
+		// send all experiments to website to be added to dropdown
+		
+		db.all("select * from Jobs", function(err, rows) {
+			rows.forEach(function (row) {
+				progress='<progress value="' + row.completedSteps + '" max="' + row.estimatedSteps + '"></progress>';
+				if(row.completed == '0') {
+					completed='Running';
+					runTime='Running';
+					if(row.estimatedSteps == '-1') progress='<progress max="1"></progress>';
+				}
+				else {
+					completed='Completed';
+					runTime = row.finishTime - row.startTime;
+					if(row.estimatedSteps == '-1') progress='<progress value="1" max="1"></progress>'
+				}
+				arr.push(
+					'<tr><td>' + row.id +
+					'</td><td>' + row.description +
+					'</td><td>' + row.type +
+					'</td><td>' + completed +
+					'</td><td>' + row.estimatedSteps +
+					'</td><td>' + row.completedSteps +
+					'</td><td>' + row.startTime +
+					'</td><td>' + row.finishTime +
+					'</td><td>' + runTime +
+					'</td><td>' + progress +
+					'</td></tr>'
+				);
+		  });
+		});
+		io.emit('sent jobs', arr.join(""));
+	}
+	else {
+		console.log('Received the value: ' + msg + ' from website: Send experiment ' + msg);
+		// send all jobs related to experiment # website to be added by table
+	}
   });
 });
 
