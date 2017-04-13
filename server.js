@@ -19,11 +19,12 @@ db.serialize(function() {
     + " id char(100) PRIMARY KEY NOT NULL,"
     + " description char(500),"
     + " type char(30) NOT NULL,"
-    + " completed BOOL NOT NULL,"
+    + " completed integer NOT NULL,"
     + " estimatedSteps integer,"
     + " completedSteps integer NOT NULL,"
     + " startTime integer NOT NULL,"
-    + " finishTime integer)");
+    + " finishTime integer,"
+    + " parentID char(100))");
 
   db.run("create table Connections ("
     + " childID char(100) PRIMARY KEY NOT NULL,"
@@ -42,7 +43,7 @@ io.on('connection', function(socket){
 		console.log('Received the value: ' + msg + ' from website: Fill out dropdown');
 		// send all experiments to website to be added to dropdown
 		
-		db.all("select * from Jobs", function(err, rows) {
+		db.all("select rowid, * from Jobs", function(err, rows) {
 			rows.forEach(function (row) {
 				progress='<progress value="' + row.completedSteps + '" max="' + row.estimatedSteps + '"></progress>';
 				if(row.completed == '0') {
@@ -55,6 +56,7 @@ io.on('connection', function(socket){
 					runTime = row.finishTime - row.startTime;
 					if(row.estimatedSteps == '-1') progress='<progress value="1" max="1"></progress>'
 				}
+        console.log('ROWID=' + row.rowid);
 				arr.push(
 					'<tr><td>' + row.id +
 					'</td><td>' + row.description +
@@ -104,10 +106,10 @@ app.post('/', function(req, res){
     var finishingTime=null;
     var startingTime = new Date().getTime();
 
-    db.run("insert into Jobs (id, description, type, completed, estimatedSteps, completedSteps, startTime, finishTime) VALUES " +
+    db.run("insert into Jobs (id, description, type, completed, estimatedSteps, completedSteps, startTime, finishTime, parentID) VALUES " +
       "('" + id + "','" + description + "','" + type + "'," + completed  +
       ", " + expectedSteps  + ", " + stepsFinished  + ", " + startingTime +
-      ", " + finishingTime + ")");
+      ", " + finishingTime + ", '" + parentID + "')");
 
     if (parentID!=="null"){
       db.run("insert into Connections (childID, parentID) VALUES " +
