@@ -180,11 +180,11 @@ td,th{
 /* PROGRESS BARS */
 
 progress {
-	width: 250px;
+	width: 200px;
 	height: 24px;
 }
 progress[value] {
-	width: 250px;
+	width: 200px;
 	height: 24px;
 }
 
