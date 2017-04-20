@@ -11,37 +11,66 @@
 
 	<script>
 		currentExperiment = 0;
+		currentJob = 0;
+		lastSent = 0; // For refresh button, lastSent=0 if experiment, lastSent=1 if job
 		socket = io();
-		
+
 		window.onload = function() {
-			arr = [];
-			socket.emit('sent jobs', currentExperiment);
-			/*
-			for(count = 0; count < 10; count++) {
-				s = '<tr><td>' + count + '</td><td>An Algorithm</td><td>Data Set 7</td><td>Running</td><td>StartTime</td><td>RunTime</td><td><progress value="11" max="100"></progress></td></tr>';
-				arr[count] = s;
-			}
-			document.getElementById('tableBody').innerHTML = arr.join("");
-			*/
-		}
-		
-		$(function () {
-			<!-- we can make the request to the server onclick refresh -->
-			$('#btn').click(function () {
+			document.getElementById('tableBody').innerHTML = '<thead><tr><th>Select an Experiment</th></tr></thead>';
+			document.getElementById('myDropdown').innerHTML = '<button class="btn">No Experiments Found</button><br>';
+			getDropdown();
+		};
+
+		function refreshButton() {
+			getDropdown();
+			if(lastSent == '0') {
 				socket.emit('sent jobs', currentExperiment);
-				return false;
-			});
-			socket.on('sent jobs', function(msg) {
-				<!-- add here code to parse variable and fill up the table(next two lines are for testing-->
-				document.getElementById('tableBody').innerHTML = msg;
-				<!-- $('#messages').append($('<li>').text(msg)); -->
-			});
-		});
-		
+				socket.on('sent jobs', function(msg) {
+					document.getElementById('tableBody').innerHTML = msg;
+				});
+			}
+			else if(lastSent == '1') {
+				socket.emit('sent subjobs', currentJob);
+				socket.on('sent subjobs', function(msg) {
+					document.getElementById('tableBody').innerHTML = msg;
+				});
+			}
+		};
+
 		function experimentSelect() {
-			currentExperiment = event.target.id.replace( /^\D+/g, '');
+			currentExperiment = event.target.id;
+			lastSent = 0;
+			getDropdown();
 			socket.emit('sent jobs', currentExperiment);
+			socket.on('sent jobs', function(msg) {
+				document.getElementById('tableBody').innerHTML = msg;
+			});
+		};
+
+		function jobSelect() {
+			currentJob = event.target.id;
+			lastSent = 1;
+			getDropdown();
+			socket.emit('sent subjobs', currentJob);
+			socket.on('sent subjobs', function(msg) {
+				document.getElementById('tableBody').innerHTML = msg;
+			});
+		};
+		
+		function goBack() {
+			getDropdown();
+			socket.emit('sent jobs', currentExperiment);
+			socket.on('sent jobs', function(msg) {
+				document.getElementById('tableBody').innerHTML = msg;
+			});
 		}
+		
+		function getDropdown() {
+			socket.emit('sent dropdown', 0);
+			socket.on('sent dropdown', function(msg) {
+				document.getElementById('myDropdown').innerHTML = msg;
+			});
+		};
 	</script>
 </head>
 <body>
@@ -50,35 +79,11 @@
 		<p><i>Open-Source Tools for Recommender Systems</i>
 	</div>
 	<div class="dropdown">
-		<button onclick="dropdownFunction()" class="dropbtn">Current Experiments</button>
-		<div id="myDropdown" class="dropdown-content">
-			<button onclick="experimentSelect()" id="exp1" class="btn">Experiment 1</button><br>
-			<button onclick="experimentSelect()" id="exp2" class="btn">Experiment 2</button><br>
-			<button onclick="experimentSelect()" id="exp3" class="btn">Experiment 3</button><br>
-		</div>
-		<button id="btn" class="btn">REFRESH</button>
+		<button onclick="dropdownFunction();getDropdown();" class="dropbtn">Current Experiments</button>
+		<div id="myDropdown" class="dropdown-content"></div>
+		<button onclick="refreshButton()" id="btn" class="btn">REFRESH</button>
 	</div>
-
-	<!-- Recieved messages : TEST CODE --
-	<div>
-		<ul id="messages"></ul>
-	</div-->
-
-	<table class="sortable table-fill">
-		<thead><tr>
-			<th>ID</th>
-			<th>Description</th>
-			<th>Type</th>
-			<th>Status</th>
-			<th>Est. Steps</th>
-			<th>Comp. Steps</th>
-			<th>Start</th>
-			<th>Finish</th>
-			<th>RunTime</th>
-			<th>Progress</th>
-		</tr></thead>
-		<tbody id="tableBody"/>
-	</table>
+	<table id="tableBody" class="sortable table-fill"></table>
 	<footer>
 		<br>
 		Copyright © 2017 <a href="https://github.com/lenskit/lenskit/blob/master/CONTRIBUTORS.md">LensKit Contributors</a>.
